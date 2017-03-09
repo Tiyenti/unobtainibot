@@ -6,7 +6,12 @@ def get_command_help_string(serverid, userlevel, commandname):
 
     servername = servers[f'sid{serverid}']['servername']
     disabledcommands = servers[f'sid{serverid}']['disabledcommands']
-    customcommands = servers[f'sid{serverid}']['customcommands']
+
+    try:
+        customcommands = servers[f'sid{serverid}']['customcommands']
+    except KeyError:
+        customcommands = []
+
     prefix = servers[f'sid{serverid}']['prefix']
 
     # 0 = Everyone
@@ -15,7 +20,6 @@ def get_command_help_string(serverid, userlevel, commandname):
     # 3 = Server Owner
     # 4 = Bot Owner
 
-    # setprefix
     if commandname == 'setprefix':
         messagestr = f'`{prefix}setprefix [prefix] <server|default>`: ' + \
                       'Changes the bot command prefix. (userlevel: 2)\n' + \
@@ -86,7 +90,11 @@ def get_command_help_string(serverid, userlevel, commandname):
                       'Takes the provided Python code, `exec`s it, and shows the output. (userlevel: 4)' + \
                       '`[code ... ]`: The code to execute.'
     elif commandname == 'userlevel':
-        messagestr = f'`{prefix}userlevel`: Shows your userlevel.\n'
+        messagestr = f'`{prefix}userlevel`: Shows your userlevel. (userlevel: 0)\n'
+    elif commandname == 'stats':
+        messagestr = f'`{prefix}stats`: Shows some stats about the bot. (userlevel: 0)\n' + \
+                     'The stats shown: how many servers the bot is in, how many users ' + \
+                     'are online, how many times bot commands have been used, and the bot uptime.'
     elif commandname == None:
         messagestr = f'**Unobtainibot commands available to you in {servername}**\n' + \
                      f'For more information on these commands, use `{prefix}help <command>`\n\n'
@@ -110,6 +118,7 @@ def get_command_help_string(serverid, userlevel, commandname):
             messagestr += f'`{prefix}test`: Prints the arguments specfied..\n'
             messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
             messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
+            messagestr += f'`{prefix}stats:` Shows some stats about the bot.'
 
         # custom commands
         for command in customcommands:

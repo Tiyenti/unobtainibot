@@ -11,6 +11,7 @@ new server.
 how long the bot waits inbetween status changes.  
 - `statuses` - An array of strings to be used as statuses. The bot
 will randomly change to one of these every `statustimeout` seconds.
+- `usecounter` - An integer which tells how many times a bot command has been used.
 
 `logins.json` - Logins.
 
@@ -96,6 +97,10 @@ a PM rather than in the channel it was sent from. `0` for false, `1` for true.
 `<args ... >`: The arguments to print. If omitted, no arguments are printed.
 
 `tf`: Flip some tables. (╯°□°）╯︵ ┻━┻ (userlevel: 0)
+
+`stats`: Shows some stats about the bot. (userlevel: 0)  
+The stats shown are how many servers the bot is in, how many members of said servers
+are online, the bot's command usage counter, and the bot's uptime.
 
 `eval [code ... ]`: Takes the provided Python expression, and `eval`s it. (userlevel: 4)  
 `[code ... ]`: The Python code to be evaluated.

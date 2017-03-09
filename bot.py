@@ -5,6 +5,9 @@ import json
 import random
 import os
 import commandhelp
+from datetime import datetime
+
+startTime = datetime.now()
 
 client = discord.Client()
 
@@ -37,7 +40,7 @@ def add_server_to_config(serverid, servername, serverownerid, prefix):
     servers[f'sid{serverid}'] = serverjsondata
 
     with open('servers.json', 'w') as f:
-        json.dump(servers, f)
+        json.dump(servers, f, indent=4)
 
 def update_server_config(serverid, servername, serverownerid):
     with open('servers.json', 'r') as f:
@@ -56,7 +59,7 @@ def update_server_config(serverid, servername, serverownerid):
     servers[f'sid{serverid}'] = server
 
     with open('servers.json', 'w') as f:
-        json.dump(servers, f)
+        json.dump(servers, f, indent=4)
 
 def set_default_prefix(prefix):
     global defaultprefix
@@ -69,7 +72,7 @@ def set_default_prefix(prefix):
 
     print(f'Set default prefix to {prefix}. Writing to config file...')
     with open('config.json', 'w') as f:
-        json.dump(config, f)
+        json.dump(config, f, indent=4)
 
 def set_server_prefix(serverid, prefix):
     with open('servers.json', 'r') as f:
@@ -80,7 +83,7 @@ def set_server_prefix(serverid, prefix):
     servers[f'sid{serverid}'] = server
 
     with open('servers.json', 'w') as f:
-        json.dump(servers, f)
+        json.dump(servers, f, indent=4)
 
 def set_userlevel_rolenames(serverid, modrolename, adminrolename):
     with open('servers.json', 'r') as f:
@@ -94,7 +97,7 @@ def set_userlevel_rolenames(serverid, modrolename, adminrolename):
     print(f'Set ul rolenames to {modrolename} (mod), {adminrolename} (admin)')
 
     with open('servers.json', 'w') as f:
-        json.dump(servers, f)
+        json.dump(servers, f, indent=4)
 
 def get_userlevel(member, server):
     with open('servers.json', 'r') as f:
@@ -163,8 +166,19 @@ async def on_message(message):
     disabledcommands = servers[f'sid{message.server.id}']['disabledcommands']
     prefix = servers[f'sid{message.server.id}']['prefix']
 
+    usecounter = 0
+
+    try:
+        usecounter = int(config['usecounter'])
+    except KeyError:
+        print('usecounter key is missing from config.json. Setting use counter to 0.')
+
     if not message.author.bot:
         if message.content.startswith(prefix):
+            # Increase use counter in case command is found
+            # (If it's not found, it gets decremented again later.)
+            usecounter += 1
+
             args = message.content.split(' ')
             if args[0] == f'{prefix}test' and 'test' not in disabledcommands:
                 messagestr = 'Test command recieved. Arguments:'
@@ -280,7 +294,7 @@ async def on_message(message):
                                 servers[f'sid{message.server.id}']['disabledcommands'] = disabledcommands
 
                                 with open('servers.json', 'w') as f:
-                                    json.dump(servers, f)
+                                    json.dump(servers, f, indent=4)
 
                                 await client.send_message(message.channel, 'Disabled command ' \
                                                           + f'{prefix}{args[1]} on this server.')
@@ -295,7 +309,7 @@ async def on_message(message):
                             servers[f'sid{message.server.id}']['disabledcommands'] = disabledcommands
 
                             with open('servers.json', 'w') as f:
-                                json.dump(servers, f)
+                                json.dump(servers, f, indent=4)
 
                                 await client.send_message(message.channel, 'Enabled command ' \
                                                           + f'{prefix}{args[1]} on this server.')
@@ -346,7 +360,7 @@ async def on_message(message):
                             servers[f'sid{message.server.id}']['quotes'].append(quotestring)
                             quotes = servers[f'sid{message.server.id}']['quotes']
                             with open('servers.json', 'w') as f:
-                                json.dump(servers, f)
+                                json.dump(servers, f, indent=4)
                                 await client.send_message(message.channel,
                                                           'Added quote #' +
                                                           f'{len(quotes) - 1}: {quotestring}')
@@ -365,7 +379,7 @@ async def on_message(message):
                                 if msg.content == 'y':
                                     servers[f'sid{message.server.id}']['quotes'] = []
                                     with open('servers.json', 'w') as f:
-                                        json.dump(servers, f)
+                                        json.dump(servers, f, indent=4)
                                         await client.send_message(message.channel, 'Removed all quotes.')
                             else:
                                 await client.send_message(message.channel,
@@ -384,7 +398,7 @@ async def on_message(message):
                                 servers[f'sid{message.server.id}']['quotes'].pop(quotenum)
 
                                 with open('servers.json', 'w') as f:
-                                    json.dump(servers, f)
+                                    json.dump(servers, f, indent=4)
                                     await client.send_message(message.channel,
                                                               f'Removed quote #{quotenum}: {quote}')
 
@@ -449,7 +463,7 @@ async def on_message(message):
                             servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
 
                         with open('servers.json', 'w') as f:
-                            json.dump(servers, f)
+                            json.dump(servers, f, indent=4)
                             await client.send_message(message.channel,
                                                       f'Successfully added custom command.')
                     else:
@@ -469,7 +483,7 @@ async def on_message(message):
                                 servers[f'sid{message.server.id}']['customcommands'].remove(command)
 
                                 with open('servers.json', 'w') as f:
-                                    json.dump(servers, f)
+                                    json.dump(servers, f, indent=4)
                                     await client.send_message(message.channel,
                                                               'Successfully removed command.')
                                 return
@@ -515,10 +529,30 @@ async def on_message(message):
                 else:
                     await client.send_message(message.channel,
                                               'You do not have permission to use that command.')
-            elif args[0] == f'{prefix}userlevel':
+            elif args[0] == f'{prefix}userlevel' and 'userlevel' not in disabledcommands:
                 userlevel = get_userlevel(message.author, message.server)
                 await client.send_message(message.channel,
                                           f'<@{message.author.id}>: You have userlevel {userlevel}.')
+            elif args[0] == f'{prefix}stats' and 'stats' not in disabledcommands:
+                servercount = len(client.servers)
+                # Online count is -1 
+                onlinecount = -1
+                for server in client.servers:
+                    for member in server.members:
+                        if not member.status == discord.Status.offline or \
+                           member.status == discord.Status.invisible:
+                            onlinecount += 1
+
+                uptime = datetime.now() - startTime
+
+                await client.send_message(message.channel,
+                                          '```' +
+                                          f'Currently in {servercount} server(s), ' +
+                                          f'with {onlinecount} user(s) online (excluding ' +
+                                          'invisible users and myself).\n' +
+                                          f'Bot command use counter: {usecounter}\n' +
+                                          f'Bot uptime: {uptime}```')
+
             else:
                 customcommands = servers[f'sid{message.server.id}']['customcommands']
 
@@ -535,7 +569,16 @@ async def on_message(message):
                             await client.send_message('You do not have permission to use that command.')
                         return
 
-                # If the command isn't found during that loop, then fallback to doing nothing.
+                # By this point in the code, the command has not been found, so we the decrease the use
+                # counter.
+                usecounter -= 1
+
+            # And now we save the new usecounter to the json.
+            config['usecounter'] = usecounter
+
+            with open('config.json', 'w') as f:
+                json.dump(config, f, indent=4)
+
 
 @client.event
 async def on_message_delete(message):

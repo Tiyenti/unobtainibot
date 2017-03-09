@@ -2,5 +2,6 @@
     "prefix": "!",
     "botownerid": "your-user-id",
     "statustimeout": "60",
-    "statuses": [ "Status 1", "Status 2", "Status 3" ]
+    "statuses": [ "Status 1", "Status 2", "Status 3" ],
+    "usecounter": "0"
 }
