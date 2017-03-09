@@ -1,4 +1,4 @@
-# Unobtianibot
+# Unobtainibot
 A sloppily coded discord bot which does absolutley nothing of use.
 
 ## Config
