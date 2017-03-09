@@ -4,7 +4,6 @@ import configparser
 import json
 import random
 import os
-import threading
 import commandhelp
 
 client = discord.Client()
