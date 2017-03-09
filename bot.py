@@ -44,7 +44,12 @@ def update_server_config(serverid, servername, serverownerid):
     with open('servers.json', 'r') as f:
         servers = json.load(f)
 
-    server = servers[f'sid{serverid}']
+    try:
+        server = servers[f'sid{serverid}']
+    except KeyError:
+        # server config missing
+        add_server_to_config(serverid, servername, serverownerid, defaultprefix)
+        return
 
     server['servername'] = servername
     server['serverownerid'] = serverownerid

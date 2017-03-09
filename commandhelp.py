@@ -86,7 +86,7 @@ def get_command_help_string(serverid, userlevel, commandname):
                       'Takes the provided Python code, `exec`s it, and shows the output. (userlevel: 4)' + \
                       '`[code ... ]`: The code to execute.'
     elif commandname == 'userlevel':
-        messagestr = f'`{prefix}userlevel`: Shows your userlevel.\n' + \
+        messagestr = f'`{prefix}userlevel`: Shows your userlevel.\n'
     elif commandname == None:
         messagestr = f'**Unobtainibot commands available to you in {servername}**\n' + \
                      f'For more information on these commands, use `{prefix}help <command>`\n\n'
