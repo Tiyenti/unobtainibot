@@ -1,0 +1,20 @@
+{
+    "sid##################":
+    {
+        "servername": "Discord Server",
+        "serverownerid": "##################",
+        "prefix": "!",
+        "disabledcommands": ["8ball", "tf"],
+        "modrolename": "Moderator",
+        "adminrolename": "Admin",
+        "quotes": ["Quote 1", "Quote 2", "Quote 3"],
+        "customcommands": [
+            {
+                "name": "customcommand",
+                "userlevel": 0,
+                "replyinpm": 0,
+                "content": "Custom command!"
+            }
+        ]
+    }
+}

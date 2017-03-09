@@ -1,0 +1,6 @@
+{
+    "prefix": "!",
+    "botownerid": "your-user-id",
+    "statustimeout": "60",
+    "statuses": [ "Status 1", "Status 2", "Status 3" ]
+}
