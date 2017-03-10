@@ -32,13 +32,7 @@ the prefix, that are disabled on this server.
 server.  
 - `adminrolename` - The name of the role used for admins on the server.  
 - `quotes` - An array of strings used as quotes for the `quote` command.  
-- `customcommnads` - An array of objects used to denote custom comands. The command object
-follows this structure:  
--- `name`: The name of the command, without the prefix.  
--- `userlevel`: An integer indicating the mininum userlevel required to use the command.  
--- `replyinpm`: An interger indicating whether or not the command will reply
-to users in a PM.  
--- `content`: The content the command will print when used.
+- `customcommnads` - An array of objects used to denote custom comands.
 
 ## Hardcoded commands
 Key: `[required]`, `[required and repeatable ... ]`, `<optional>`, `<optional and repeatable ... >`
@@ -60,7 +54,7 @@ If omitted, defaults to `server`. This arg requires userlevel 4.
 
 `delquote [index|all]`: Removes a quote from the list. (userlevel: 1)  
 `[index|all]`: A number corrosponding to the index of the quote to be removed, or `all`,
-which removes all quotes. Using `all` requires userlevel 2.
+which removes all quotes.
 
 `quote <index|list>`: Prints out a quote from the list. (userlevel: 0)  
 `<index|list>`: Either a number corrospoding to the index of the  quote to be printed, or `list`.
@@ -78,7 +72,7 @@ a list of all commands they can use in that serever.
 `toggle [command]`: Toggles a command on or off on the current server. (userlevel: 2)  
 `[command]`: The name of the command, without prefix, to toggle.
 
-`addcom [name] [userlevel] [reply-in-pm] [content ... ]`: Adds a simple custom command to the server.
+`addcom simple [name] [userlevel] [reply-in-pm] [content ... ]`: Adds a simple custom command to the server.
 (userlevel: 2)  
 `[name]`: The name of the command to add, without prefix.  
 `[userlevel]`: An integer corrosponding to the userlevel required to use the command.
@@ -86,6 +80,24 @@ a list of all commands they can use in that serever.
 `[reply-in-pm]`: An integer that specifies whether or not this command should reply to the user in
 a PM rather than in the channel it was sent from. `0` for false, `1` for true.  
 `[content ... ]`: The content the command will print when used.
+
+`addcom quotesys [name] [addquotecom] [delquotecom]`: Adds a custom quote system to the server. The
+addquote and delquote commands are automatically created. (userlevel: 2)  
+`[name]`: The name of the quote system.  
+`[addquotecom]`: The name of the command that will be used to add to this quote system.  
+`[delquotecom]`: The name of the command that will be used to remove from this quote system.
+
+`addcom addquote [name] [quotesys]`: Adds an addquote command for a custom quote system. While the
+addquote and delquote commands are automatically created when adding a custom quote system, they
+can be removed with `delcom` independently, so this command allows them to be added back. (userlevel: 2)  
+`[name]`: The name of the command, without prefix.  
+`[quotesys]`: The name of the custom quote system this command will edit.
+
+`addcom delquote [name] [quotesys]`: Adds an delquote command for a custom quote system. While the
+addquote and delquote commands are automatically created when adding a custom quote system, they
+can be removed with `delcom` independently, so this command allows them to be added back. (userlevel: 2)  
+`[name]`: The name of the command, without prefix.  
+`[quotesys]`: The name of the custom quote system this command will edit.
 
 `delcom [name]`: Removes a custom command from the server. (userlevel: 2)  
 `[name]`: The name of the command to remove.
@@ -109,3 +121,18 @@ are online, the bot's command usage counter, and the bot's uptime.
 `exec [code ... ]`: Takes the provided Python code, and `exec`s it. (userlevel: 4)  
 `[code ... ]`: The Python code to be executed.
 
+## Custom commands
+Custom commands can be added per-server using the `addcom` command. These commands can have different
+types, and the structure of the command object in the JSON is different depending on this type, but
+every type will always have a `type`, `name`, and `content` key.
+
+- `type`: The type of the command.
+- `name`: The name of the command.
+- `content`: This is the most complex one as its value depends on what the type of the command is.  
+    - For `simple` type commands, it is a string contaning the message the command will print when used.  
+    - For `quotesys` type commands, it is a string array containing the quotes this command will return.  
+    - For `addquote` and `delquote` type commands, it is a string with the name of the quote system the command
+      will modify.
+- `userlevel`: The minimum userlevel required to use the command. `simple` type only.
+- `replyinpm`: If `1`, replies to the user in a PM. If `0`, it replies to the user in the same channel
+the command was used from. `simple` type only.

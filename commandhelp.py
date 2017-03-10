@@ -41,8 +41,7 @@ def get_command_help_string(serverid, userlevel, commandname):
         messagestr = f'`{prefix}delquote [index|all]`: ' + \
                       'Removes a quote from the list. (userlevel: 1)\n' + \
                       '`[index|all]`: Either a number corrosponding to the index ' + \
-                      'of the quote to be removed, or `all` (which deletes all quotes). ' + \
-                      'Using `all` requires userlevel 2.'
+                      'of the quote to be removed, or `all` (which deletes all quotes). '
     elif commandname == 'quote':
         messagestr = f'`{prefix}quote <index|list>`: Prints a quote from the list. (userlevel: 0)\n' + \
                       '`<index|list>: Either a number corrosponding to the index of ' + \
@@ -62,7 +61,7 @@ def get_command_help_string(serverid, userlevel, commandname):
                       'Toggles on/off the specified command on the server. (userlevel: 2)\n' + \
                       '`[command]`: The command to toggle, without the prefix.'
     elif commandname == 'addcom':
-        messagestr = f'`{prefix}addcom [name] [userlevel] [reply-in-pm] [content ... ]`: ' + \
+        messagestr = f'`{prefix}addcom simple [userlevel] [reply-in-pm] [content ... ]`: ' + \
                       'Adds a simple custom command to the server. (userlevel: 2)\n' + \
                       '`[name]`: The name of the command, without prefix.\n' + \
                       '`[userlevel]`: An integer corrosponding to the minimum userlevel ' + \
@@ -70,7 +69,22 @@ def get_command_help_string(serverid, userlevel, commandname):
                       '`3` for server owner, and `4` for bot owner.\n' + \
                       '`[reply-in-pm]`: Either `1` or `0`. If `1`, the command will reply to the user ' + \
                       'in a PM rather than in the channel the command was used.\n' + \
-                      '`[content ... ]`: The content the command will print when used.'
+                      '`[content ... ]`: The content the command will print when used.\n\n'
+        messagestr += f'`{prefix}addcom quotesys [name] [addquotecom] [delquotecom]`: ' + \
+                      'Adds a custom quote system to the server. (userlevel: 2)\n' + \
+                      '`[name]`: The name of the quote system, without command prefix.\n' + \
+                      '`[addquotecom]`: The name of the command that will be used to add to the ' + \
+                      'quote list, which gets automatically created.\n' + \
+                      '`[delquotecom]`: The name of the command that will be used to remove from the ' + \
+                      'quote list, which gets automatically created.\n\n'
+        messagestr += f'`{prefix}addcom addquote [name] [quotesys]`: ' + \
+                      'Adds an addquote command for a custom quote system. (userlevel: 2)\n' + \
+                      '`[name]`: The name of the command, without prefix.\n' + \
+                      '`[quotesys]`: The name of the custom quote system this command will edit.\n\n'
+        messagestr += f'`{prefix}addcom delquote [name] [quotesys]`: ' + \
+                      'Adds an delquote command for a custom quote system. (userlevel: 2)\n' + \
+                      '`[name]`: The name of the command, without prefix.\n' + \
+                      '`[quotesys]`: The name of the custom quote system this command will edit.'
     elif commandname == 'delcom':
         messagestr = f'`{prefix}delcom [command]`: ' + \
                       'Removes a custom command from the server. (userlevel: 2)\n' + \
@@ -118,12 +132,21 @@ def get_command_help_string(serverid, userlevel, commandname):
             messagestr += f'`{prefix}test`: Prints the arguments specfied..\n'
             messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
             messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
-            messagestr += f'`{prefix}stats:` Shows some stats about the bot.'
+            messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
 
         # custom commands
         for command in customcommands:
             if command['name'] not in disabledcommands:
-                if userlevel >= int(command['userlevel']):
-                    messagestr += f'`{prefix}{command["name"]}`: Custom command.\n'
+                if command['type'] == 'simple':
+                    if userlevel >= int(command['userlevel']):
+                        messagestr += f'`{prefix}{command["name"]}`: Simple custom command.\n'
+                elif command['type'] == 'quotesys':
+                    messagestr += f'`{prefix}{command["name"]}`: Custom quote system.\n'
+                elif command['type'] == 'addquote':
+                    messagestr += f'`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
+                                  f'{command["content"]}.\n'
+                elif command['type'] == 'delquote':
+                    messagestr += f'`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
+                                  f'{command["content"]}.\n'
 
     return messagestr
