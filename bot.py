@@ -126,7 +126,10 @@ async def random_status_change():
         randomnum = random.randint(0, len(statuses) - 1)
         print(f'Now playing: {statuses[randomnum]}')
         await client.change_presence(game=discord.Game(name=statuses[randomnum]), afk=False)
-        await asyncio.sleep(timeout)
+        if timeout != 0:
+            await asyncio.sleep(timeout)
+        else:
+            break
 
 @client.event
 async def on_ready():

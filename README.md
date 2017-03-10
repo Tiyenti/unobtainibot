@@ -8,7 +8,8 @@ A sloppily coded discord bot which does absolutley nothing of use.
 new server.  
 - `botownerid` - The bot owner's user ID.  
 - `statustimeout` - An amount of time in seconds which decides
-how long the bot waits inbetween status changes.  
+how long the bot waits inbetween status changes. Setting this
+to `0` disables automatic status changes.
 - `statuses` - An array of strings to be used as statuses. The bot
 will randomly change to one of these every `statustimeout` seconds.
 - `usecounter` - An integer which tells how many times a bot command has been used.
