@@ -415,6 +415,13 @@ async def on_message(message):
             elif args[0] == f'{prefix}addcom':
                 if get_userlevel(message.author, message.server) > 1:
                     if len(args) > 1:
+                        customcommandnames = []
+                        try:
+                            for command in servers[f'sid{message.server.id}']['customcommands']:
+                                customcommandnames.append(command['name'])
+                        except KeyError:
+                            customcommandnames = []
+
                         if args[1] == 'simple':
                             if len(args) > 5:
                                 # args[1] = type
@@ -423,29 +430,34 @@ async def on_message(message):
                                 # args[4] = reply in pm? 0/1
                                 # args[5:] = content
 
-                                content = ''
-
-                                for arg in args[5:]:
-                                    content += f'{arg} '
-
-                                jsondata = {
-                                    'type': args[1],
-                                    'name': args[2],
-                                    'userlevel': int(args[3]),
-                                    'replyinpm': int(args[4]),
-                                    'content': content
-                                }
-
-                                try:
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                except KeyError:
-                                    servers[f'sid{message.server.id}']['customcommands'] = []
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-
-                                with open('servers.json', 'w') as f:
-                                    json.dump(servers, f, indent=4)
+                                if args[2] in customcommandnames:
                                     await client.send_message(message.channel,
-                                                              f'Successfully added custom command.')
+                                                              'Unable to create command; a custom command ' +
+                                                              'with that name already exists.')
+                                else:
+                                    content = ''
+
+                                    for arg in args[5:]:
+                                        content += f'{arg} '
+
+                                    jsondata = {
+                                        'type': args[1],
+                                        'name': args[2],
+                                        'userlevel': int(args[3]),
+                                        'replyinpm': int(args[4]),
+                                        'content': content
+                                    }
+
+                                    try:
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+                                    except KeyError:
+                                        servers[f'sid{message.server.id}']['customcommands'] = []
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+
+                                    with open('servers.json', 'w') as f:
+                                        json.dump(servers, f, indent=4)
+                                        await client.send_message(message.channel,
+                                                                  f'Successfully added custom command.')
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom simple [name] ' +
@@ -457,36 +469,43 @@ async def on_message(message):
                                 # args[3] = addquote command
                                 # args[4] = delquote command
 
-                                getquote = {
-                                    'type': args[1],
-                                    'name': args[2],
-                                    'content': []
-                                }
-                                addquote = {
-                                    'type': 'addquote',
-                                    'name': args[3],
-                                    'content': args[2]
-                                }
-                                delquote = {
-                                    'type': 'delquote',
-                                    'name': args[4],
-                                    'content': args[2]
-                                }
-
-                                try:
-                                    servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-                                    servers[f'sid{message.server.id}']['customcommands'].append(addquote)
-                                    servers[f'sid{message.server.id}']['customcommands'].append(delquote)
-                                except KeyError:
-                                    servers[f'sid{message.server.id}']['customcommands'] = []
-                                    servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-                                    servers[f'sid{message.server.id}']['customcommands'].append(addquote)
-                                    servers[f'sid{message.server.id}']['customcommands'].append(delquote)
-
-                                with open('servers.json', 'w') as f:
-                                    json.dump(servers, f, indent=4)
+                                if args[2] in customcommandnames \
+                                   or args[3] in customcommandnames \
+                                   or args[4] in customcommandnames:
                                     await client.send_message(message.channel,
-                                                              f'Successfully added custom commands.')
+                                                              'Unable to create command; a custom command ' +
+                                                              'with that name already exists.')
+                                else:
+                                    getquote = {
+                                        'type': args[1],
+                                        'name': args[2],
+                                        'content': []
+                                    }
+                                    addquote = {
+                                        'type': 'addquote',
+                                        'name': args[3],
+                                        'content': args[2]
+                                    }
+                                    delquote = {
+                                        'type': 'delquote',
+                                        'name': args[4],
+                                        'content': args[2]
+                                    }
+
+                                    try:
+                                        servers[f'sid{message.server.id}']['customcommands'].append(getquote)
+                                        servers[f'sid{message.server.id}']['customcommands'].append(addquote)
+                                        servers[f'sid{message.server.id}']['customcommands'].append(delquote)
+                                    except KeyError:
+                                        servers[f'sid{message.server.id}']['customcommands'] = []
+                                        servers[f'sid{message.server.id}']['customcommands'].append(getquote)
+                                        servers[f'sid{message.server.id}']['customcommands'].append(addquote)
+                                        servers[f'sid{message.server.id}']['customcommands'].append(delquote)
+
+                                    with open('servers.json', 'w') as f:
+                                        json.dump(servers, f, indent=4)
+                                        await client.send_message(message.channel,
+                                                                  f'Successfully added custom commands.')
 
                             else:
                                 await client.send_message(message.channel,
@@ -498,17 +517,22 @@ async def on_message(message):
                                 # args[2] = command name
                                 # args[3] = quote system name
 
-                                jsondata = {
-                                    'type': 'addquote',
-                                    'name': args[2],
-                                    'content': args[3]
-                                }
+                                if args[2] in customcommandnames:
+                                    await client.send_message(message.channel,
+                                                              'Unable to create command; a custom command ' +
+                                                              'with that name already exists.')
+                                else:
+                                    jsondata = {
+                                        'type': 'addquote',
+                                        'name': args[2],
+                                        'content': args[3]
+                                    }
 
-                                try:
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                except KeyError:
-                                    servers[f'sid{message.server.id}']['customcommands'] = []
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+                                    try:
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+                                    except KeyError:
+                                        servers[f'sid{message.server.id}']['customcommands'] = []
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
 
                                     with open('servers.json', 'w') as f:
                                         json.dump(servers, f, indent=4)
@@ -524,17 +548,22 @@ async def on_message(message):
                                 # args[2] = command name
                                 # args[3] = quote system name
 
-                                jsondata = {
-                                    'type': 'delquote',
-                                    'name': args[2],
-                                    'content': args[3]
-                                }
+                                if args[2] in customcommandnames:
+                                    await client.send_message(message.channel,
+                                                              'Unable to create command; a custom command ' +
+                                                              'with that name already exists.')
+                                else:
+                                    jsondata = {
+                                        'type': 'delquote',
+                                        'name': args[2],
+                                        'content': args[3]
+                                    }
 
-                                try:
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                except KeyError:
-                                    servers[f'sid{message.server.id}']['customcommands'] = []
-                                    servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+                                    try:
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
+                                    except KeyError:
+                                        servers[f'sid{message.server.id}']['customcommands'] = []
+                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
 
                                     with open('servers.json', 'w') as f:
                                         json.dump(servers, f, indent=4)
