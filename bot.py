@@ -362,19 +362,14 @@ async def on_message(message):
                 if get_userlevel(message.author, message.server) > 0:
                     if len(args) > 1:
                         if args[1] == "all":
-                            if get_userlevel(message.author, message.server) > 1:
+                            await client.send_message(message.channel,
+                                                      '**Hold it!** ' +
+                                                      'This will remove every quote on this server. ' +
+                                                      'Continue? [y/N]')
+                            msg = await client.wait_for_message(author=message.author)
+                            if msg.content == 'y':
                                 await client.send_message(message.channel,
-                                                          '**Hold it!** ' +
-                                                          'This will remove every quote on this server. ' +
-                                                          'Continue? [y/N]')
-                                msg = await client.wait_for_message(author=message.author)
-                                if msg.content == 'y':
-                                    await client.send_message(message.channel,
-                                                              quotesystem.remove_all_quotes(message.server.id))
-                            else:
-                                await client.send_message(message.channel,
-                                                          'Only admins have the ability to delete all ' +
-                                                          'quotes.')
+                                                          quotesystem.remove_all_quotes(message.server.id))
                         else:
                             try:
                                 await client.send_message(message.channel,

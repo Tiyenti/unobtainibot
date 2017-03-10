@@ -3,6 +3,9 @@ config.json
 logins.json
 servers.json
 
+# Ignore emacs autosave files
+.#*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
