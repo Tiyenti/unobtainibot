@@ -630,12 +630,12 @@ async def on_message(message):
                 uptime = datetime.now() - startTime
 
                 await client.send_message(message.channel,
-                                          '```' +
-                                          f'Currently in {servercount} server(s), ' +
+                                          '```asciidoc\n' +
+                                          f'= Currently in {servercount} server(s), ' +
                                           f'with {onlinecount} user(s) online (excluding ' +
                                           'invisible users and myself).\n' +
-                                          f'Bot command use counter: {usecounter}\n' +
-                                          f'Bot uptime: {uptime}```')
+                                          f': Bot command use counter :: {usecounter}\n' +
+                                          f': Bot uptime              :: {uptime}```')
             else:
                 customcommands = servers[f'sid{message.server.id}']['customcommands']
 
