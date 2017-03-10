@@ -1,5 +1,9 @@
 # Unobtainibot
-A sloppily coded discord bot which does absolutley nothing of use.
+A sloppily coded discord bot which does absolutley nothing of use. In fact, the code is so sloppy that
+I don't even know how it works myself. You are not expected to be able to understand it.
+
+If you're somehow able to wrap your head around this bot's god awful codebase and want to contribute,
+go ahead and fork and make a PR. But seriously, don't do that, it's not worth the effort.
 
 ## Config
 `config.json` - General config.

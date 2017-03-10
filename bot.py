@@ -146,17 +146,19 @@ async def on_server_join(server):
     if not config.has_section(server.id):
         print(f'Server {server} does not have a config entry. Creating one...')
         add_server_to_config(server.id, server.name, server.owner.id, defaultprefix)
-        await client.send_message(server.default_channel, '**Unobtainibot is now in your server!**\n' \
-                                  + 'The bot has been initlised with the default config:\n' \
-                                  + '**Prefix:** !\n' \
-                                  + '**Admin Role Name:** Admin\n' \
-                                  + '**Moderator Role Name:** Moderator\n' \
-                                  + '**Disabled Commands:** !8ball, !tf\n' \
-                                  + 'Use `!help` to get PM\'d a list of commands this bot supports.')
+        await client.send_message(server.default_channel, '**Unobtainibot is now in your server!**\n'
+                                  + 'The bot has been initlised with the default config:\n'
+                                  + '**Prefix:** !\n'
+                                  + '**Admin Role Name:** Admin\n'
+                                  + '**Moderator Role Name:** Moderator\n'
+                                  + '**Disabled Commands:** !8ball, !tf\n'
+                                  + 'Use `!help` to get PM\'d a list of commands available to you in '
+                                  + 'this server.')
     else:
         update_server_config(server.id, server.name, server.owner.id)
-        await client.send_message(server.default_channel, '**Unobtainibot is now in your server!**\n' \
-                                  + 'Use `!help` to get PM\'d a list of commands this bot supports.')
+        await client.send_message(server.default_channel, '**Unobtainibot is now in your server!**\n'
+                                  + 'Use `!help` to get PM\'d a list of commands available to you in '
+                                  + 'this server.')
 
 @client.event
 async def on_message(message):
