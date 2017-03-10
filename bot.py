@@ -535,14 +535,18 @@ async def on_message(message):
                                           f'<@{message.author.id}>: You have userlevel {userlevel}.')
             elif args[0] == f'{prefix}stats' and 'stats' not in disabledcommands:
                 servercount = len(client.servers)
-                # Online count is -1 
-                onlinecount = -1
-                for server in client.servers:
-                    for member in server.members:
-                        if not member.status == discord.Status.offline or \
-                           member.status == discord.Status.invisible:
-                            onlinecount += 1
+                users = client.get_all_members()
+                onlineuserids = []
+                for user in users:
+                    if not user.status == discord.Status.offline or \
+                       user.status == discord.Status.invisible:
+                       print(user.status)
+                       if user.id not in onlineuserids and \
+                          user.id != client.user.id:
+                          onlineuserids.append(user.id)
 
+                onlinecount = len(onlineuserids)
+                print(onlineuserids)
                 uptime = datetime.now() - startTime
 
                 await client.send_message(message.channel,
