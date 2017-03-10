@@ -539,7 +539,6 @@ async def on_message(message):
                 for user in users:
                     if not user.status == discord.Status.offline or \
                        user.status == discord.Status.invisible:
-                       print(user.status)
                        if user.id not in onlineuserids and \
                           user.id != client.user.id:
                           onlineuserids.append(user.id)
