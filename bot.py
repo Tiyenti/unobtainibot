@@ -118,14 +118,18 @@ def get_userlevel(member, server):
     else:
         return 0
 
+laststatus = ''
 async def random_status_change():
+    global laststatus
     statuses = config['statuses']
     timeout = int(config['statustimeout'])
 
     while True:
         randomnum = random.randint(0, len(statuses) - 1)
         print(f'Now playing: {statuses[randomnum]}')
-        await client.change_presence(game=discord.Game(name=statuses[randomnum]), afk=False)
+        if not statuses[randomnum] == laststatus:
+            await client.change_presence(game=discord.Game(name=statuses[randomnum]), afk=False)
+        laststatus = statuses[randomnum]
         if timeout != 0:
             await asyncio.sleep(timeout)
         else:
