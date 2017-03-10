@@ -307,7 +307,7 @@ async def on_message(message):
                             else:
                                 await client.send_message(message.channel, 'You cannot disable that command.')
                         else:
-                            print (f'{args[1]} is enabled. Disabling it.')
+                            print (f'{args[1]} is disabled. Enabling it.')
 
                             disabledcommands.remove(args[1])
                             print (f'New disabled command array: {disabledcommands}')

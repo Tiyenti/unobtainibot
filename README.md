@@ -47,7 +47,7 @@ Key: `[required]`, `[required and repeatable ... ]`, `<optional>`, `<optional an
 `changeprefix [prefix] <server|default>`: Changes the bot command prefix. (userlevel: 2)  
 `[prefix]`: What to change the prefix to.  
 `<server|default>`: Specify whether or not to change the server's prefix, or the default prefix.
-If ommitted, defaults to `server`. This arg requires userlevel 4.
+If omitted, defaults to `server`. This arg requires userlevel 4.
 
 `setulrolenames [modrole] <adminrole>`: Changes the moderator/admin role names. (userlevel: 2)  
 `[modrole]`: The moderator role name.  
@@ -72,7 +72,7 @@ If `list`, the user will be PM'd a list of quotes and their indexes. If omitted,
 ### Commands
 
 `help <command>`: PMs the user info regarding the commands this bot supports. (userlevel: 0)  
-`<command>`: A command name, without the prefix, to get information on. If omittied, PMs the user
+`<command>`: A command name, without the prefix, to get information on. If omitted, PMs the user
 a list of all commands they can use in that serever.
 
 `toggle [command]`: Toggles a command on or off on the current server. (userlevel: 2)  
