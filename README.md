@@ -86,7 +86,7 @@ a PM rather than in the channel it was sent from. `0` for false, `1` for true.
 `[content ... ]`: The content the command will print when used.
 
 `addcom quotesys [name] [userlevel] [addcomname] [addcomuserlevel] [delcomname]`:
-Adds a full custom quote system to the server, including the addcom and delcom commands. (userlevel: 2)
+Adds a full custom quote system to the server, including the addcom and delcom commands. (userlevel: 2)  
 `[name]`: The name of the quote system.  
 `[userlevel]`:  An integer corrosponding to the userlevel required to use the quote command.  
 `[addcomname]`: The name of the command used to add to the quote system.  
