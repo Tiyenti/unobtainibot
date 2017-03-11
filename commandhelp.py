@@ -139,12 +139,18 @@ def get_command_help_string(serverid, userlevel, commandname):
             messagestr += f'`{prefix}delquote`: Removes a quote from the quote list.\n'
         if userlevel >= 0:
             messagestr += f'`{prefix}help`: PMs the user info about the commands this bot supports.\n'
-            messagestr += f'`{prefix}quote`: Prints a quote from the list.\n'
-            messagestr += f'`{prefix}8ball`: Prints a random Magic 8-Ball response.\n'
-            messagestr += f'`{prefix}test`: Prints the arguments specfied..\n'
-            messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
-            messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
-            messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
+            if 'quote' not in disabledcommands:
+                messagestr += f'`{prefix}quote`: Prints a quote from the list.\n'
+            if '8ball' not in disabledcommands:
+                messagestr += f'`{prefix}8ball`: Prints a random Magic 8-Ball response.\n'
+            if 'test' not in disabledcommands:
+                messagestr += f'`{prefix}test`: Prints the arguments specfied..\n'
+            if 'tf' not in disabledcommands:
+                messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
+            if 'userlevel' not in disabledcommands:
+                messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
+            if 'stats' not in disabledcommands:
+                messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
 
         # custom commands
         for command in customcommands:
