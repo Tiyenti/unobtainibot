@@ -70,20 +70,19 @@ def get_command_help_string(serverid, userlevel, commandname):
                       '`[reply-in-pm]`: Either `1` or `0`. If `1`, the command will reply to the user ' + \
                       'in a PM rather than in the channel the command was used.\n' + \
                       '`[content ... ]`: The content the command will print when used.\n\n'
-        messagestr += f'`{prefix}addcom quotesys [name] [addquotecom] [delquotecom]`: ' + \
+        messagestr += f'`{prefix}addcom quotesys [name] [userlevel]`: ' + \
                       'Adds a custom quote system to the server. (userlevel: 2)\n' + \
                       '`[name]`: The name of the quote system, without command prefix.\n' + \
-                      '`[addquotecom]`: The name of the command that will be used to add to the ' + \
-                      'quote list, which gets automatically created.\n' + \
-                      '`[delquotecom]`: The name of the command that will be used to remove from the ' + \
-                      'quote list, which gets automatically created.\n\n'
-        messagestr += f'`{prefix}addcom addquote [name] [quotesys]`: ' + \
+                      '`[userlevel]`: The minimum userlevel required to use the command. '
+        messagestr += f'`{prefix}addcom addquote [name] [userlevel] [quotesys]`: ' + \
                       'Adds an addquote command for a custom quote system. (userlevel: 2)\n' + \
                       '`[name]`: The name of the command, without prefix.\n' + \
+                      '`[userlevel]`: The minimum userlevel required to use the command.' + \
                       '`[quotesys]`: The name of the custom quote system this command will edit.\n\n'
-        messagestr += f'`{prefix}addcom delquote [name] [quotesys]`: ' + \
+        messagestr += f'`{prefix}addcom delquote [name] [userlevel] [quotesys]`: ' + \
                       'Adds an delquote command for a custom quote system. (userlevel: 2)\n' + \
                       '`[name]`: The name of the command, without prefix.\n' + \
+                      '`[userlevel]`: The minimum userlevel required to use the command.' + \
                       '`[quotesys]`: The name of the custom quote system this command will edit.'
     elif commandname == 'delcom':
         messagestr = f'`{prefix}delcom [command]`: ' + \
@@ -137,16 +136,16 @@ def get_command_help_string(serverid, userlevel, commandname):
         # custom commands
         for command in customcommands:
             if command['name'] not in disabledcommands:
-                if command['type'] == 'simple':
-                    if userlevel >= int(command['userlevel']):
+                if userlevel >= int(command['userlevel']):
+                    if command['type'] == 'simple':
                         messagestr += f'`{prefix}{command["name"]}`: Simple custom command.\n'
-                elif command['type'] == 'quotesys':
-                    messagestr += f'`{prefix}{command["name"]}`: Custom quote system.\n'
-                elif command['type'] == 'addquote':
-                    messagestr += f'`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
-                                  f'{command["content"]}.\n'
-                elif command['type'] == 'delquote':
-                    messagestr += f'`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
-                                  f'{command["content"]}.\n'
+                    elif command['type'] == 'quotesys':
+                        messagestr += f'`{prefix}{command["name"]}`: Custom quote system.\n'
+                    elif command['type'] == 'addquote':
+                        messagestr += f'`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
+                                      f'{command["content"]}.\n'
+                    elif command['type'] == 'delquote':
+                        messagestr += f'`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
+                                      f'{command["content"]}.\n'
 
     return messagestr

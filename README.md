@@ -85,22 +85,20 @@ a list of all commands they can use in that serever.
 a PM rather than in the channel it was sent from. `0` for false, `1` for true.  
 `[content ... ]`: The content the command will print when used.
 
-`addcom quotesys [name] [addquotecom] [delquotecom]`: Adds a custom quote system to the server. The
-addquote and delquote commands are automatically created. (userlevel: 2)  
+`addcom quotesys [name] [userlevel]`: Adds a custom quote system to the server. (userlevel: 2)  
 `[name]`: The name of the quote system.  
-`[addquotecom]`: The name of the command that will be used to add to this quote system.  
-`[delquotecom]`: The name of the command that will be used to remove from this quote system.
+`[userlevel]`:  An integer corrosponding to the userlevel required to use the command.
 
-`addcom addquote [name] [quotesys]`: Adds an addquote command for a custom quote system. While the
-addquote and delquote commands are automatically created when adding a custom quote system, they
-can be removed with `delcom` independently, so this command allows them to be added back. (userlevel: 2)  
+`addcom addquote [name] [userlevel] [quotesys]`: Adds an addquote command for a custom quote system.
+(userlevel: 2)  
 `[name]`: The name of the command, without prefix.  
+`[userlevel]`:  An integer corrosponding to the userlevel required to use the command.  
 `[quotesys]`: The name of the custom quote system this command will edit.
 
-`addcom delquote [name] [quotesys]`: Adds an delquote command for a custom quote system. While the
-addquote and delquote commands are automatically created when adding a custom quote system, they
-can be removed with `delcom` independently, so this command allows them to be added back. (userlevel: 2)  
+`addcom delquote [name] [userlevel] [quotesys]`: Adds an delquote command for a custom quote system.
+(userlevel: 2)  
 `[name]`: The name of the command, without prefix.  
+`[userlevel]`:  An integer corrosponding to the userlevel required to use the command.  
 `[quotesys]`: The name of the custom quote system this command will edit.
 
 `delcom [name]`: Removes a custom command from the server. (userlevel: 2)  
@@ -137,6 +135,6 @@ every type will always have a `type`, `name`, and `content` key.
     - For `quotesys` type commands, it is a string array containing the quotes this command will return.  
     - For `addquote` and `delquote` type commands, it is a string with the name of the quote system the command
       will modify.
-- `userlevel`: The minimum userlevel required to use the command. `simple` type only.
+- `userlevel`: The minimum userlevel required to use the command.
 - `replyinpm`: If `1`, replies to the user in a PM. If `0`, it replies to the user in the same channel
 the command was used from. `simple` type only.

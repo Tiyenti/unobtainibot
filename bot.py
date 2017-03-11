@@ -463,59 +463,45 @@ async def on_message(message):
                                                           f'Usage: `{prefix}addcom simple [name] ' +
                                                           '[userlevel] [reply-in-pm] [content]`')
                         elif args[1] == 'quotesys':
-                            if len(args) > 4:
+                            if len(args) > 3:
                                 # args[1] = type
                                 # args[2] = quotesys name
-                                # args[3] = addquote command
-                                # args[4] = delquote command
+                                # args[3] = userlevel
 
-                                if args[2] in customcommandnames \
-                                   or args[3] in customcommandnames \
-                                   or args[4] in customcommandnames:
+                                if args[2] in customcommandnames:
                                     await client.send_message(message.channel,
                                                               'Unable to create command; a custom command ' +
                                                               'with that name already exists.')
                                 else:
+
                                     getquote = {
                                         'type': args[1],
                                         'name': args[2],
+                                        'userlevel': int(args[3]),
                                         'content': []
-                                    }
-                                    addquote = {
-                                        'type': 'addquote',
-                                        'name': args[3],
-                                        'content': args[2]
-                                    }
-                                    delquote = {
-                                        'type': 'delquote',
-                                        'name': args[4],
-                                        'content': args[2]
                                     }
 
                                     try:
                                         servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-                                        servers[f'sid{message.server.id}']['customcommands'].append(addquote)
-                                        servers[f'sid{message.server.id}']['customcommands'].append(delquote)
                                     except KeyError:
                                         servers[f'sid{message.server.id}']['customcommands'] = []
                                         servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-                                        servers[f'sid{message.server.id}']['customcommands'].append(addquote)
-                                        servers[f'sid{message.server.id}']['customcommands'].append(delquote)
 
                                     with open('servers.json', 'w') as f:
                                         json.dump(servers, f, indent=4)
                                         await client.send_message(message.channel,
-                                                                  f'Successfully added custom commands.')
+                                                                  f'Successfully added custom command.')
 
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom quotesys [name] ' +
-                                                          '[addquotecom] [delquotecom]`')
+                                                          '[userlevel]`')
                         elif args[1] == 'addquote':
-                            if len(args) > 3:
+                            if len(args) > 4:
                                 # args[1] = type
                                 # args[2] = command name
-                                # args[3] = quote system name
+                                # args[3] = userlevel
+                                # args[4] = quote system name
 
                                 if args[2] in customcommandnames:
                                     await client.send_message(message.channel,
@@ -525,7 +511,8 @@ async def on_message(message):
                                     jsondata = {
                                         'type': 'addquote',
                                         'name': args[2],
-                                        'content': args[3]
+                                        'userlevel': args[3],
+                                        'content': args[4]
                                     }
 
                                     try:
@@ -541,22 +528,25 @@ async def on_message(message):
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom addquote [name] ' +
-                                                          '[quotesys]`')
+                                                          '[userlevel] [quotesys]`')
                         elif args[1] == 'delquote':
-                            if len(args) > 3:
+                            if len(args) > 4:
                                 # args[1] = type
                                 # args[2] = command name
-                                # args[3] = quote system name
+                                # args[3] = userlevel
+                                # args[4] = quote system name
 
                                 if args[2] in customcommandnames:
                                     await client.send_message(message.channel,
                                                               'Unable to create command; a custom command ' +
                                                               'with that name already exists.')
+
                                 else:
                                     jsondata = {
                                         'type': 'delquote',
                                         'name': args[2],
-                                        'content': args[3]
+                                        'userlevel': args[3],
+                                        'content': args[4]
                                     }
 
                                     try:
@@ -572,7 +562,7 @@ async def on_message(message):
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom delquote [name] ' +
-                                                          '[quotesys]`')
+                                                          '[userlevel] [quotesys]`')
                         else:
                             await client.send_message(message.channel,
                                                       f'Unknown type. Supported types: ' +
@@ -681,32 +671,33 @@ async def on_message(message):
                             else:
                                 await client.send_message('You do not have permission to use that command.')
                         elif command['type'] == 'quotesys':
-                            if len(args) > 1:
-                                try:
-                                    await client.send_message(message.channel,
-                                                              quotesystem.get_quote(message.server.id,
-                                                                                    int(args[1]),
-                                                                                    command['name']))
-                                except ValueError:
-                                    if args[1] == 'list':
-                                        quotes = quotesystem.list_quotes(message.server.id, command['name'])
-                                        if quotes != None:
-                                            await client.send_message(message.author, quotes)
-                                            await client.send_message(message.channel,
-                                                                      f'<@{message.author.id}>: Check your PMs')
+                            if get_userlevel(message.author, message.server) >= int(command['userlevel']):
+                                if len(args) > 1:
+                                    try:
+                                        await client.send_message(message.channel,
+                                                                  quotesystem.get_quote(message.server.id,
+                                                                                        int(args[1]),
+                                                                                        command['name']))
+                                    except ValueError:
+                                        if args[1] == 'list':
+                                            quotes = quotesystem.list_quotes(message.server.id, command['name'])
+                                            if quotes != None:
+                                                await client.send_message(message.author, quotes)
+                                                await client.send_message(message.channel,
+                                                                          f'<@{message.author.id}>: Check your PMs')
+                                            else:
+                                                await client.send_message(message.channel,
+                                                                          f'There are no quotes to list.')
                                         else:
                                             await client.send_message(message.channel,
-                                                                      f'There are no quotes to list.')
-                                    else:
-                                        await client.send_message(message.channel,
-                                                                  f'Failed to get quote; argument given ' +
-                                                                  'was not an integer.')
-                            else:
-                                await client.send_message(message.channel,
-                                                          quotesystem.get_quote(message.server.id,
-                                                                                None, command['name']))
+                                                                      f'Failed to get quote; argument given ' +
+                                                                      'was not an integer.')
+                                else:
+                                    await client.send_message(message.channel,
+                                                              quotesystem.get_quote(message.server.id,
+                                                                                    None, command['name']))
                         elif command['type'] == 'addquote':
-                            if get_userlevel(message.author, message.server) >= 1:
+                            if get_userlevel(message.author, message.server) >= int(command['userlevel']):
                                 if len(args) > 1:
                                     quotestring = ''
                                     for arg in args[1:]:
@@ -716,7 +707,7 @@ async def on_message(message):
                                                                                     quotestring,
                                                                                     command['content']))
                         elif command['type'] == 'delquote':
-                            if get_userlevel(message.author, message.server) >= 1:
+                            if get_userlevel(message.author, message.server) >= int(command['userlevel']):
                                 if len(args) > 1:
                                     if args[1] == "all":
                                         await client.send_message(message.channel,
