@@ -5,6 +5,8 @@ import random
 import os
 import commandhelp
 import quotesystem
+import customcommands
+import errors
 from datetime import datetime
 
 startTime = datetime.now()
@@ -415,13 +417,6 @@ async def on_message(message):
             elif args[0] == f'{prefix}addcom':
                 if get_userlevel(message.author, message.server) > 1:
                     if len(args) > 1:
-                        customcommandnames = []
-                        try:
-                            for command in servers[f'sid{message.server.id}']['customcommands']:
-                                customcommandnames.append(command['name'])
-                        except KeyError:
-                            customcommandnames = []
-
                         if args[1] == 'simple':
                             if len(args) > 5:
                                 # args[1] = type
@@ -430,67 +425,41 @@ async def on_message(message):
                                 # args[4] = reply in pm? 0/1
                                 # args[5:] = content
 
-                                if args[2] in customcommandnames:
-                                    await client.send_message(message.channel,
-                                                              'Unable to create command; a custom command ' +
-                                                              'with that name already exists.')
-                                else:
+                                try:
                                     content = ''
-
                                     for arg in args[5:]:
                                         content += f'{arg} '
 
-                                    jsondata = {
-                                        'type': args[1],
-                                        'name': args[2],
-                                        'userlevel': int(args[3]),
-                                        'replyinpm': int(args[4]),
-                                        'content': content
-                                    }
-
-                                    try:
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                    except KeyError:
-                                        servers[f'sid{message.server.id}']['customcommands'] = []
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-
-                                    with open('servers.json', 'w') as f:
-                                        json.dump(servers, f, indent=4)
-                                        await client.send_message(message.channel,
-                                                                  f'Successfully added custom command.')
-                            else:
-                                await client.send_message(message.channel,
-                                                          f'Usage: `{prefix}addcom simple [name] ' +
-                                                          '[userlevel] [reply-in-pm] [content]`')
+                                    customcommands.add_simple_command(message.server.id, args[2],
+                                                                      int(args[3]), int(args[4]),
+                                                                                        content)
+                                    await client.send_message(message.channel,
+                                                              'Successfully added custom command.')
+                                except errors.CustomCommandNameError:
+                                    await client.send_message(message.channel,
+                                                              'A custom command with that name already ' +
+                                                              'exists.')
+                                except ValueError:
+                                    await client.send_message(message.channel,
+                                                              'Userlevel/replyinpm must be an integer.')
                         elif args[1] == 'quotesys':
                             if len(args) > 3:
                                 # args[1] = type
                                 # args[2] = quotesys name
                                 # args[3] = userlevel
 
-                                if args[2] in customcommandnames:
+                                try:
+                                    customcommands.add_quotesys_command(message.server.id,
+                                                                        args[2], int(args[3]))
                                     await client.send_message(message.channel,
-                                                              'Unable to create command; a custom command ' +
-                                                              'with that name already exists.')
-                                else:
-
-                                    getquote = {
-                                        'type': args[1],
-                                        'name': args[2],
-                                        'userlevel': int(args[3]),
-                                        'content': []
-                                    }
-
-                                    try:
-                                        servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-                                    except KeyError:
-                                        servers[f'sid{message.server.id}']['customcommands'] = []
-                                        servers[f'sid{message.server.id}']['customcommands'].append(getquote)
-
-                                    with open('servers.json', 'w') as f:
-                                        json.dump(servers, f, indent=4)
-                                        await client.send_message(message.channel,
-                                                                  f'Successfully added custom command.')
+                                                              'Successfully added custom command.')
+                                except errors.CustomCommandNameError:
+                                    await client.send_message(message.channel,
+                                                              'A custom command with that name already ' +
+                                                              'exists.')
+                                except ValueError:
+                                    await client.send_message(message.channel,
+                                                              'Userlevel must be an integer.')
 
                             else:
                                 await client.send_message(message.channel,
@@ -503,28 +472,20 @@ async def on_message(message):
                                 # args[3] = userlevel
                                 # args[4] = quote system name
 
-                                if args[2] in customcommandnames:
+                                try:
+                                    customcommands.add_addquote_command(message.server.id,
+                                                                        args[2], int(args[3]),
+                                                                        args[4])
                                     await client.send_message(message.channel,
-                                                              'Unable to create command; a custom command ' +
-                                                              'with that name already exists.')
-                                else:
-                                    jsondata = {
-                                        'type': 'addquote',
-                                        'name': args[2],
-                                        'userlevel': args[3],
-                                        'content': args[4]
-                                    }
+                                                              'Successfully added custom command.')
+                                except errors.CustomCommandNameError:
+                                    await client.send_message(message.channel,
+                                                              'A custom command with that name already ' +
+                                                              'exists.')
+                                except ValueError:
+                                    await client.send_message(message.channel,
+                                                              'Userlevel must be an integer.')
 
-                                    try:
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                    except KeyError:
-                                        servers[f'sid{message.server.id}']['customcommands'] = []
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-
-                                    with open('servers.json', 'w') as f:
-                                        json.dump(servers, f, indent=4)
-                                        await client.send_message(message.channel,
-                                                                  f'Successfully added custom command.')
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom addquote [name] ' +
@@ -536,29 +497,19 @@ async def on_message(message):
                                 # args[3] = userlevel
                                 # args[4] = quote system name
 
-                                if args[2] in customcommandnames:
+                                try:
+                                    customcommands.add_delquote_command(message.server.id,
+                                                                        args[2], int(args[3]),
+                                                                        args[4])
                                     await client.send_message(message.channel,
-                                                              'Unable to create command; a custom command ' +
-                                                              'with that name already exists.')
-
-                                else:
-                                    jsondata = {
-                                        'type': 'delquote',
-                                        'name': args[2],
-                                        'userlevel': args[3],
-                                        'content': args[4]
-                                    }
-
-                                    try:
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-                                    except KeyError:
-                                        servers[f'sid{message.server.id}']['customcommands'] = []
-                                        servers[f'sid{message.server.id}']['customcommands'].append(jsondata)
-
-                                    with open('servers.json', 'w') as f:
-                                        json.dump(servers, f, indent=4)
-                                        await client.send_message(message.channel,
-                                                                  f'Successfully added custom command.')
+                                                              'Successfully added custom command.')
+                                except errors.CustomCommandNameError:
+                                    await client.send_message(message.channel,
+                                                              'A custom command with that name already ' +
+                                                              'exists.')
+                                except ValueError:
+                                    await client.send_message(message.channel,
+                                                              'Userlevel must be an integer.')
                             else:
                                 await client.send_message(message.channel,
                                                           f'Usage: `{prefix}addcom delquote [name] ' +
@@ -576,9 +527,9 @@ async def on_message(message):
             elif args[0] == f'{prefix}delcom':
                 if get_userlevel(message.author, message.server) > 1:
                     if len(args) > 1:
-                        customcommands = servers[f'sid{message.server.id}']['customcommands']
+                        customcommandarray = servers[f'sid{message.server.id}']['customcommands']
 
-                        for command in customcommands:
+                        for command in customcommandarray:
                             if command['name'] == args[1]:
                                 servers[f'sid{message.server.id}']['customcommands'].remove(command)
 
@@ -656,9 +607,9 @@ async def on_message(message):
                                           f': Bot command use counter :: {usecounter}\n' +
                                           f': Bot uptime              :: {uptime}```')
             else:
-                customcommands = servers[f'sid{message.server.id}']['customcommands']
+                customcommandarray = servers[f'sid{message.server.id}']['customcommands']
 
-                for command in customcommands:
+                for command in customcommandarray:
                     if args[0][len(prefix):] == command['name'] and command['name'] not in disabledcommands:
                         if command['type'] == 'simple':
                             if get_userlevel(message.author, message.server) >= int(command['userlevel']):
