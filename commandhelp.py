@@ -108,6 +108,9 @@ def get_command_help_string(serverid, userlevel, commandname):
         messagestr = f'`{prefix}stats`: Shows some stats about the bot. (userlevel: 0)\n' + \
                      'The stats shown: how many servers the bot is in, how many users ' + \
                      'are online, how many times bot commands have been used, and the bot uptime.'
+    elif commandname != None:
+        messagestr = 'There\'s no help informaiton available for that command. Either the command ' + \
+                     'just plain doesn\'t exist, or it\'s a server-specific custom command.'
     elif commandname == None:
         messagestr = f'**Unobtainibot commands available to you in {servername}**\n' + \
                      f'For more information on these commands, use `{prefix}help <command>`\n\n'
