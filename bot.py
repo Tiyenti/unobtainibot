@@ -442,14 +442,14 @@ async def on_message(message):
                                 except ValueError:
                                     await client.send_message(message.channel,
                                                               'Userlevel/replyinpm must be an integer.')
-                        elif args[1] == 'quotesys':
+                        elif args[1] == 'quote':
                             if len(args) > 3:
                                 # args[1] = type
                                 # args[2] = quotesys name
                                 # args[3] = userlevel
 
                                 try:
-                                    customcommands.add_quotesys_command(message.server.id,
+                                    customcommands.add_quote_command(message.server.id,
                                                                         args[2], int(args[3]))
                                     await client.send_message(message.channel,
                                                               'Successfully added custom command.')
@@ -463,7 +463,7 @@ async def on_message(message):
 
                             else:
                                 await client.send_message(message.channel,
-                                                          f'Usage: `{prefix}addcom quotesys [name] ' +
+                                                          f'Usage: `{prefix}addcom quote [name] ' +
                                                           '[userlevel]`')
                         elif args[1] == 'addquote':
                             if len(args) > 4:
@@ -517,7 +517,7 @@ async def on_message(message):
                         else:
                             await client.send_message(message.channel,
                                                       f'Unknown type. Supported types: ' +
-                                                      '`simple`, `quotesys`, `addquote`, `delquote`')
+                                                      '`simple`, `quote`, `addquote`, `delquote`')
                     else:
                          await client.send_message(message.channel,
                                                    f'Usage: `{prefix}addcom [type] [command-options]`')
@@ -621,7 +621,7 @@ async def on_message(message):
                                     await client.send_message(message.channel, command['content'])
                             else:
                                 await client.send_message('You do not have permission to use that command.')
-                        elif command['type'] == 'quotesys':
+                        elif command['type'] == 'quote' or command['type'] == 'quotesys':
                             if get_userlevel(message.author, message.server) >= int(command['userlevel']):
                                 if len(args) > 1:
                                     try:
