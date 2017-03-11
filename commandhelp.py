@@ -141,16 +141,28 @@ def get_command_help_string(serverid, userlevel, commandname):
             messagestr += f'`{prefix}help`: PMs the user info about the commands this bot supports.\n'
             if 'quote' not in disabledcommands:
                 messagestr += f'`{prefix}quote`: Prints a quote from the list.\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}quote`: Prints a quote from the list.~~\n'
             if '8ball' not in disabledcommands:
                 messagestr += f'`{prefix}8ball`: Prints a random Magic 8-Ball response.\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}8ball`: Prints a random Magic 8-Ball response.~~\n'
             if 'test' not in disabledcommands:
-                messagestr += f'`{prefix}test`: Prints the arguments specfied..\n'
+                messagestr += f'`{prefix}test`: Prints the arguments specfied.\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}test`: Prints the arguments specfied.~~\n'
             if 'tf' not in disabledcommands:
                 messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻~~\n'
             if 'userlevel' not in disabledcommands:
                 messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}userlevel`: Shows your userlevel.~~\n'
             if 'stats' not in disabledcommands:
                 messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
+            elif userlevel >= 3:
+                messagestr += f'~~`{prefix}stats:` Shows some stats about the bot.~~\n'
 
         # custom commands
         for command in customcommands:
@@ -158,7 +170,7 @@ def get_command_help_string(serverid, userlevel, commandname):
                 if userlevel >= int(command['userlevel']):
                     if command['type'] == 'simple':
                         messagestr += f'`{prefix}{command["name"]}`: Simple custom command.\n'
-                    elif command['type'] == 'quotesys':
+                    elif command['type'] == 'quote' or command['type'] == 'quotesys':
                         messagestr += f'`{prefix}{command["name"]}`: Custom quote system.\n'
                     elif command['type'] == 'addquote':
                         messagestr += f'`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
@@ -166,5 +178,17 @@ def get_command_help_string(serverid, userlevel, commandname):
                     elif command['type'] == 'delquote':
                         messagestr += f'`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
                                       f'{command["content"]}.\n'
+            elif userlevel >= 3:
+                if userlevel >= int(command['userlevel']):
+                    if command['type'] == 'simple':
+                        messagestr += f'~~`{prefix}{command["name"]}`: Simple custom command.~~\n'
+                    elif command['type'] == 'quote' or command['type'] == 'quotesys':
+                        messagestr += f'~~`{prefix}{command["name"]}`: Custom quote system.~~\n'
+                    elif command['type'] == 'addquote':
+                        messagestr += f'~~`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
+                                      f'{command["content"]}.~~\n'
+                    elif command['type'] == 'delquote':
+                        messagestr += f'~~`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
+                                      f'{command["content"]}.~~\n'
 
     return messagestr
