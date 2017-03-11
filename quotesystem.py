@@ -10,9 +10,10 @@ def get_quote(serverid, index, customcommandname=None):
             quotes = servers[f'sid{serverid}']['quotes']
         else:
             for command in servers[f'sid{serverid}']['customcommands']:
-                if command['name'] == customcommandname and command['type'] == 'quotesys':
-                    quotes = command['content']
-                    break
+                if command['name'] == customcommandname:
+                   if command['type'] == 'quote' or command['type'] == 'quotesys':
+                       quotes = command['content']
+                       break
                 else:
                     quotes = []
     except KeyError:
@@ -41,9 +42,10 @@ def list_quotes(serverid, customcommandname=None):
             quotes = servers[f'sid{serverid}']['quotes']
         else:
             for command in servers[f'sid{serverid}']['customcommands']:
-                if command['name'] == customcommandname and command['type'] == 'quotesys':
-                    quotes = command['content']
-                    break
+                if command['name'] == customcommandname:
+                   if command['type'] == 'quote' or command['type'] == 'quotesys':
+                       quotes = command['content']
+                       break
                 else:
                     quotes = []
     except KeyError:
@@ -71,9 +73,10 @@ def add_quote(serverid, quote, customcommandname=None):
         else:
             counter = 0
             for command in servers[f'sid{serverid}']['customcommands']:
-                if command['name'] == customcommandname and command['type'] == 'quotesys':
-                    customcommandindex = counter
-                    break
+                if command['name'] == customcommandname:
+                   if command['type'] == 'quote' or command['type'] == 'quotesys':
+                       customcommandindex = counter
+                       break
                 counter += 1
 
             servers[f'sid{serverid}']['customcommands'][customcommandindex]['content'].append(quote)
@@ -94,7 +97,8 @@ def remove_quote(serverid, index, customcommandname=None):
             quotes = servers[f'sid{serverid}']['quotes']
         else:
             for command in servers[f'sid{serverid}']['customcommands']:
-                if command['name'] == customcommandname and command['type'] == 'quotesys':
+                if command['name'] == customcommandname:
+                   if command['type'] == 'quote' or command['type'] == 'quotesys':
                     quotes = command['content']
                     break
                 else:
@@ -115,9 +119,10 @@ def remove_quote(serverid, index, customcommandname=None):
                 else:
                     counter = 0
                     for command in servers[f'sid{serverid}']['customcommands']:
-                        if command['name'] == customcommandname and command['type'] == 'quotesys':
-                            customcommandindex = counter
-                            break
+                        if command['name'] == customcommandname:
+                            if command['type'] == 'quote' or command['type'] == 'quotesys':
+                                customcommandindex = counter
+                                break
                         counter += 1
 
                     servers[f'sid{serverid}']['customcommands'][customcommandindex]['content'].pop(quotenum)
@@ -142,9 +147,10 @@ def remove_all_quotes(serverid, customcommandname=None):
         else:
             counter = 0
             for command in servers[f'sid{serverid}']['customcommands']:
-                if command['name'] == customcommandname and command['type'] == 'quotesys':
-                    customcommandindex = counter
-                    break
+                if command['name'] == customcommandname:
+                   if command['type'] == 'quote' or command['type'] == 'quotesys':
+                       customcommandindex = counter
+                       break
                 counter += 1
 
             del servers[f'sid{serverid}']['customcommands'][customcommandindex]['content'][:]

@@ -45,7 +45,7 @@ def add_simple_command(serverid, name, userlevel, replyinpm, content):
         }
         add_command(serverid, jsondata)
 
-def add_getquote_command(serverid, name, userlevel):
+def add_quote_command(serverid, name, userlevel):
     with open('servers.json', 'r') as f:
         servers = json.load(f)
 
@@ -55,7 +55,7 @@ def add_getquote_command(serverid, name, userlevel):
         raise errors.CustomCommandNameError('a custom command with that name already exists')
     else:
         jsondata = {
-            'type': 'getquote',
+            'type': 'quote',
             'name': name,
             'userlevel': userlevel,
             'content': []

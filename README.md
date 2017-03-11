@@ -85,7 +85,17 @@ a list of all commands they can use in that serever.
 a PM rather than in the channel it was sent from. `0` for false, `1` for true.  
 `[content ... ]`: The content the command will print when used.
 
-`addcom quotesys [name] [userlevel]`: Adds a custom quote system to the server. (userlevel: 2)  
+`addcom quotesys [name] [userlevel] [addcomname] [addcomuserlevel] [delcomname]`:
+Adds a full custom quote system to the server, including the addcom and delcom commands. (userlevel: 2)
+`[name]`: The name of the quote system.  
+`[userlevel]`:  An integer corrosponding to the userlevel required to use the quote command.  
+`[addcomname]`: The name of the command used to add to the quote system.  
+`[addcomlevel]`:  An integer corrosponding to the userlevel required to use the addquote command.  
+`[delcomname]`: The name of the command used to remove from the quote system.  
+`[delcomlevel]`:  An integer corrosponding to the userlevel required to use the delquote command.  
+
+`addcom quote [name] [userlevel]`: Adds a quote system to the server without adding the addquote
+and delquote commands. (userlevel: 2)  
 `[name]`: The name of the quote system.  
 `[userlevel]`:  An integer corrosponding to the userlevel required to use the command.
 
@@ -132,7 +142,7 @@ every type will always have a `type`, `name`, and `content` key.
 - `name`: The name of the command.
 - `content`: This is the most complex one as its value depends on what the type of the command is.  
     - For `simple` type commands, it is a string contaning the message the command will print when used.  
-    - For `quotesys` type commands, it is a string array containing the quotes this command will return.  
+    - For `quote` type commands, it is a string array containing the quotes this command will return.  
     - For `addquote` and `delquote` type commands, it is a string with the name of the quote system the command
       will modify.
 - `userlevel`: The minimum userlevel required to use the command.

@@ -70,8 +70,18 @@ def get_command_help_string(serverid, userlevel, commandname):
                       '`[reply-in-pm]`: Either `1` or `0`. If `1`, the command will reply to the user ' + \
                       'in a PM rather than in the channel the command was used.\n' + \
                       '`[content ... ]`: The content the command will print when used.\n\n'
-        messagestr += f'`{prefix}addcom quotesys [name] [userlevel]`: ' + \
+        messagestr += f'`{prefix}addcom quotesys [name] [userlevel] [addcomname] ' + \
+                      '[addcomuserlevel] [delcomname] [delcomuserlevel]`: ' + \
                       'Adds a custom quote system to the server. (userlevel: 2)\n' + \
+                      '`[name]`: The name of the quote system, without command prefix.\n' + \
+                      '`[userlevel]`: The minimum userlevel required to use the quote command.\n' + \
+                      '`[addcomname]`: The name of the addquote command, without prefix..\n' + \
+                      '`[addcomuserlevel]`: The minimum userlevel required to use the addquote command.\n' + \
+                      '`[delcomname]`: The name of the delquote command, without prefix..\n' + \
+                      '`[delcomuserlevel]`: The minimum userlevel required to use the delquote command.\n\n'
+        messagestr += f'`{prefix}addcom quote [name] [userlevel]`: ' + \
+                      'Adds a custom quote system to the server without adding the ' + \
+                      'addquote and delquote commands. (userlevel: 2)\n' + \
                       '`[name]`: The name of the quote system, without command prefix.\n' + \
                       '`[userlevel]`: The minimum userlevel required to use the command. '
         messagestr += f'`{prefix}addcom addquote [name] [userlevel] [quotesys]`: ' + \

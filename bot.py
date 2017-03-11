@@ -442,6 +442,38 @@ async def on_message(message):
                                 except ValueError:
                                     await client.send_message(message.channel,
                                                               'Userlevel/replyinpm must be an integer.')
+                        elif args[1] == 'quotesys':
+                            if len(args) > 6:
+                                # args[2] = quotesysname
+                                # args[3] = userlevel
+                                # args[4] = addquote name
+                                # args[5] = addquote userlevel
+                                # args[6] = delquote name
+                                # args[7] = delquote userlevel
+
+                                try:
+                                    customcommands.add_quote_command(message.server.id,
+                                                                     args[2], int(args[3]))
+                                    customcommands.add_addquote_command(message.server.id,
+                                                                        args[4], int(args[5]),
+                                                                        args[2])
+                                    customcommands.add_delquote_command(message.server.id,
+                                                                        args[6], int(args[7]),
+                                                                        args[2])
+                                    await client.send_message(message.channel,
+                                                              'Successfully added custom quote system.')
+                                except errors.CustomCommandNameError:
+                                    await client.send_message(message.channel,
+                                                              'A custom command with that name already ' +
+                                                              'exists.')
+                                except ValueError:
+                                    await client.send_message(message.channel,
+                                                              'Userlevel must be an integer.')
+                            else:
+                                await client.send_message(message.channel,
+                                                          f'Usage: `{prefix}addcom quotesys [name] ' +
+                                                          '[userlevel] [addcomname] [addcomuserlevel] ' +
+                                                          '[delcomname] [delcomuserlevel]`')
                         elif args[1] == 'quote':
                             if len(args) > 3:
                                 # args[1] = type
