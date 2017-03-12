@@ -118,6 +118,11 @@ def get_command_help_string(serverid, userlevel, commandname):
         messagestr = f'`{prefix}stats`: Shows some stats about the bot. (userlevel: 0)\n' + \
                      'The stats shown: how many servers the bot is in, how many users ' + \
                      'are online, how many times bot commands have been used, and the bot uptime.'
+    elif commandname == 'src':
+        messagestr = f'`{prefix}src [game] [category ... ]`: Gets the speedrun.com WR for a given game'  + \
+                     'and category. (userlevel: 0)\n' + \
+                     '`[game]`: The game to get the WR for.\n' + \
+                     '`[category ... ]`: The category to get the WR for.'
     elif commandname != None:
         messagestr = 'There\'s no help informaiton available for that command. Either the command ' + \
                      'just plain doesn\'t exist, or it\'s a server-specific custom command.'
@@ -163,6 +168,10 @@ def get_command_help_string(serverid, userlevel, commandname):
                 messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
             elif userlevel >= 2:
                 messagestr += f'~~`{prefix}stats:` Shows some stats about the bot.~~\n'
+            if 'src' not in disabledcommands:
+                messagestr += f'`{prefix}src:` Gets the speedrun.com WR for a given game and category.\n'
+            elif userlevel >= 2:
+                messagestr += f'~~`{prefix}src:` Gets the speedrun.com WR for a given game and category.~~\n'
 
         # custom commands
         for command in customcommands:

@@ -3,6 +3,7 @@ import asyncio
 import json
 import random
 import os
+import urllib.request
 import commandhelp
 import quotesystem
 import customcommands
@@ -638,6 +639,66 @@ async def on_message(message):
                                           'invisible users and myself).\n' +
                                           f': Bot command use counter :: {usecounter}\n' +
                                           f': Bot uptime              :: {uptime}```')
+            elif args[0] == f'{prefix}src':
+                # args[1] = game name
+                # args[2:] = category
+                if len(args) > 2:
+                    category = ''
+                    counter = 0
+                    for arg in args[2:]:
+                        category += arg
+                        if counter != len(args[2:]) - 1:
+                            category += ' '
+                        counter += 1
+
+                    url = f'http://www.speedrun.com//api_records.php?game={args[1]}'
+                    jsondata = json.loads(urllib.request.urlopen(url).read())
+                    if jsondata == {}:
+                        await client.send_message(message.channel, 'Error: That game does not exist.')
+                    else:
+                        gamename = list(jsondata.keys())[0]
+                        try:
+                            time = str(jsondata[gamename][category]['time'])
+                        except KeyError:
+                            time = None
+                            await client.send_message(message.channel, 'Error: That category does not exist.')
+
+                        if time != None:
+                            try:
+                                workingseconds, ms = time.split('.')
+                            except ValueError:
+                                workingseconds = time
+                                ms = None
+                            minutes, seconds = divmod(int(workingseconds), 60)
+                            hours, minutes = divmod(minutes, 60)
+
+                            sstr = str(seconds);
+                            if seconds < 10:
+                                sstr = f'0{sstr}'
+
+                            mstr = str(minutes);
+                            if minutes < 10:
+                                mstr = f'0{mstr}'
+
+                            if hours > 0:
+                                timestr = f'{hours}:{mstr}:{sstr}'
+                            else:
+                                timestr = f'{mstr}:{sstr}'
+
+                            if ms != None:
+                                timestr += f'.{ms}'
+
+                                runner = jsondata[list(jsondata.keys())[0]][category]['player']
+                                video = jsondata[list(jsondata.keys())[0]][category]['video']
+
+                                messagestr = \
+                                             f'**{gamename} {category} WR:** ' + \
+                                             f'{timestr} by {runner} - {video}'
+
+                                await client.send_message(message.channel,
+                                                          messagestr)
+                else:
+                    await client.send_message(message.channel, f'Usage: {prefix}src [game] [category ... ]')
             else:
                 customcommandarray = servers[f'sid{message.server.id}']['customcommands']
 

@@ -116,6 +116,12 @@ and delquote commands. (userlevel: 2)
 
 `userlevel`: Tells you what userlevel you have. (userlevel: 0)
 
+### External lookups
+
+`src [game] [category ... ]`: Gets the speedrun.com WR for a given game and category. (userlevel: 0)  
+`[game]`: The game to get the WR for.
+`[category ... ]`: The category to get the WR for.
+
 ### Misc
 
 `test <args ... >`: Prints the arguments specified. (userlevel: 0)  
