@@ -131,73 +131,81 @@ def get_command_help_string(serverid, userlevel, commandname):
                      f'For more information on these commands, use `{prefix}help <command>`\n\n'
 
         if userlevel >= 4:
-            messagestr += f'`{prefix}eval`: Takes the provided Python expression and `eval`s it.\n'
-            messagestr += f'`{prefix}exec`: Takes the provided Python code, and `exec`s it.\n'
+            messagestr += f'`[4] {prefix}eval`: Takes the provided Python expression and `eval`s it.\n'
+            messagestr += f'`[4] {prefix}exec`: Takes the provided Python code, and `exec`s it.\n'
         if userlevel >= 2:
-            messagestr += f'`{prefix}changeprefix`: Changes the bot command prefix.\n'
-            messagestr += f'`{prefix}setulrolenames`: Changes the admin/mod role names.\n'
-            messagestr += f'`{prefix}toggle`: Toggles a command on or off.\n'
-            messagestr += f'`{prefix}addcom`: Adds a custom command to the server.\n'
-            messagestr += f'`{prefix}delcom`: Removes a custom command from the server.\n'
+            messagestr += f'`[2] {prefix}changeprefix`: Changes the bot command prefix.\n'
+            messagestr += f'`[2] {prefix}setulrolenames`: Changes the admin/mod role names.\n'
+            messagestr += f'`[2] {prefix}toggle`: Toggles a command on or off.\n'
+            messagestr += f'`[2] {prefix}addcom`: Adds a custom command to the server.\n'
+            messagestr += f'`[2] {prefix}delcom`: Removes a custom command from the server.\n'
         if userlevel >= 1:
-            messagestr += f'`{prefix}addquote`: Adds a quote to the quote list.\n'
-            messagestr += f'`{prefix}delquote`: Removes a quote from the quote list.\n'
+            messagestr += f'`[1] {prefix}addquote`: Adds a quote to the quote list.\n'
+            messagestr += f'`[1] {prefix}delquote`: Removes a quote from the quote list.\n'
         if userlevel >= 0:
-            messagestr += f'`{prefix}help`: PMs the user info about the commands this bot supports.\n'
+            messagestr += f'`[0] {prefix}help`: PMs the user info about the commands this bot supports.\n'
             if 'quote' not in disabledcommands:
-                messagestr += f'`{prefix}quote`: Prints a quote from the list.\n'
+                messagestr += f'`[0] {prefix}quote`: Prints a quote from the list.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}quote`: Prints a quote from the list.~~\n'
+                messagestr += f'~~`[0] {prefix}quote`: Prints a quote from the list.~~\n'
             if '8ball' not in disabledcommands:
-                messagestr += f'`{prefix}8ball`: Prints a random Magic 8-Ball response.\n'
+                messagestr += f'`[0] {prefix}8ball`: Prints a random Magic 8-Ball response.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}8ball`: Prints a random Magic 8-Ball response.~~\n'
+                messagestr += f'~~`[0] {prefix}8ball`: Prints a random Magic 8-Ball response.~~\n'
             if 'test' not in disabledcommands:
-                messagestr += f'`{prefix}test`: Prints the arguments specfied.\n'
+                messagestr += f'`[0] {prefix}test`: Prints the arguments specfied.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}test`: Prints the arguments specfied.~~\n'
+                messagestr += f'~~`[0] {prefix}test`: Prints the arguments specfied.~~\n'
             if 'tf' not in disabledcommands:
-                messagestr += f'`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
+                messagestr += f'`[0] {prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻~~\n'
+                messagestr += f'~~`[0] {prefix}tf`: Flips some tables. (╯°□°）╯︵ ┻━┻~~\n'
             if 'userlevel' not in disabledcommands:
-                messagestr += f'`{prefix}userlevel`: Shows your userlevel.\n'
+                messagestr += f'`[0] {prefix}userlevel`: Shows your userlevel.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}userlevel`: Shows your userlevel.~~\n'
+                messagestr += f'~~`[0] {prefix}userlevel`: Shows your userlevel.~~\n'
             if 'stats' not in disabledcommands:
-                messagestr += f'`{prefix}stats:` Shows some stats about the bot.\n'
+                messagestr += f'`[0] {prefix}stats:` Shows some stats about the bot.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}stats:` Shows some stats about the bot.~~\n'
+                messagestr += f'~~`[0] {prefix}stats:` Shows some stats about the bot.~~\n'
             if 'src' not in disabledcommands:
-                messagestr += f'`{prefix}src:` Gets the speedrun.com WR for a given game and category.\n'
+                messagestr += f'`[0] {prefix}src:` Gets the speedrun.com WR for a given game and category.\n'
             elif userlevel >= 2:
-                messagestr += f'~~`{prefix}src:` Gets the speedrun.com WR for a given game and category.~~\n'
+                messagestr += f'~~`[0] {prefix}src:` Gets the speedrun.com WR for a given game and category.~~\n'
 
         # custom commands
         for command in customcommands:
             if command['name'] not in disabledcommands:
                 if userlevel >= int(command['userlevel']):
                     if command['type'] == 'simple':
-                        messagestr += f'`{prefix}{command["name"]}`: Simple custom command.\n'
+                        messagestr += f'`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Simple custom command.\n'
                     elif command['type'] == 'quote' or command['type'] == 'quotesys':
-                        messagestr += f'`{prefix}{command["name"]}`: Custom quote system.\n'
+                        messagestr += f'`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Custom quote system.\n'
                     elif command['type'] == 'addquote':
-                        messagestr += f'`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
+                        messagestr += f'`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Add quote to custom quote system ' + \
                                       f'{command["content"]}.\n'
                     elif command['type'] == 'delquote':
-                        messagestr += f'`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
+                        messagestr += f'`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
                                       f'{command["content"]}.\n'
             elif userlevel >= 2:
                 if userlevel >= int(command['userlevel']):
                     if command['type'] == 'simple':
-                        messagestr += f'~~`{prefix}{command["name"]}`: Simple custom command.~~\n'
+                        messagestr += f'~~`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Simple custom command.~~\n'
                     elif command['type'] == 'quote' or command['type'] == 'quotesys':
-                        messagestr += f'~~`{prefix}{command["name"]}`: Custom quote system.~~\n'
+                        messagestr += f'~~`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Custom quote system.~~\n'
                     elif command['type'] == 'addquote':
-                        messagestr += f'~~`{prefix}{command["name"]}`: Add quote to custom quote system ' + \
+                        messagestr += f'~~`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Add quote to custom quote system ' + \
                                       f'{command["content"]}.~~\n'
                     elif command['type'] == 'delquote':
-                        messagestr += f'~~`{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
+                        messagestr += f'~~`[{command["userlevel"]}] ' + \
+                                      f'{prefix}{command["name"]}`: Remove quote from custom quote system ' + \
                                       f'{command["content"]}.~~\n'
 
     return messagestr
