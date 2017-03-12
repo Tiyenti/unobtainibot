@@ -639,7 +639,7 @@ async def on_message(message):
                                           'invisible users and myself).\n' +
                                           f': Bot command use counter :: {usecounter}\n' +
                                           f': Bot uptime              :: {uptime}```')
-            elif args[0] == f'{prefix}src':
+            elif args[0] == f'{prefix}src' and 'src' not in disabledcommands:
                 # args[1] = game name
                 # args[2:] = category
                 if len(args) > 2:
