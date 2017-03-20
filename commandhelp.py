@@ -122,7 +122,8 @@ def get_command_help_string(serverid, userlevel, commandname):
         messagestr = f'`{prefix}src [game] [category ... ]`: Gets the speedrun.com WR for a given game'  + \
                      'and category. (userlevel: 0)\n' + \
                      '`[game]`: The game to get the WR for.\n' + \
-                     '`[category ... ]`: The category to get the WR for.'
+                     '`[category ... ]`: The category to get the WR for.\n' + \
+                     'Note that the category  names are case-sensitive.'
     elif commandname != None:
         messagestr = 'There\'s no help informaiton available for that command. Either the command ' + \
                      'just plain doesn\'t exist, or it\'s a server-specific custom command.'

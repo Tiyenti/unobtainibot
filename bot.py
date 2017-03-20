@@ -651,6 +651,8 @@ async def on_message(message):
                             category += ' '
                         counter += 1
 
+                    await client.send_message(message.channel, 'Fetching info, please wait...')
+
                     url = f'http://www.speedrun.com//api_records.php?game={args[1]}'
                     jsondata = json.loads(urllib.request.urlopen(url).read())
                     if jsondata == {}:
